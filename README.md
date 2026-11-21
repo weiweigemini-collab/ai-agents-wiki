@@ -2,10 +2,9 @@
 
 生成式 AI 作業：先建立「AI Agents」主題的 LLM Wiki，再用這個 Wiki 當作唯一的知識來源，製作一份教學型 HTML 簡報。
 
-- **Wiki 網頁**：https://<你的帳號>.github.io/ai-agents-wiki/
-- **教學簡報**：https://<你的帳號>.github.io/ai-agents-wiki/slides/
+- **Wiki 網頁**：https://weiweigemini-collab.github.io/ai-agents-wiki/
+- **教學簡報**：https://weiweigemini-collab.github.io/ai-agents-wiki/slides/
 
-> 把 `<你的帳號>` 換成你的 GitHub 帳號；如果 repo 不叫 `ai-agents-wiki`，網址的最後一段也要跟著改。
 
 ---
 
