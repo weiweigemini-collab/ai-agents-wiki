@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Agents LLM Wiki</title>
+<style>
+:root{--paper:#EEF1F5;--ink:#1B2A41;--muted:#5B6B82;--line:#C9D1DC;--card:#fff;--thought:#6C4AB6;--action:#0E8C7F;--obs:#B87A00;
+--font:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);color:var(--ink);background:var(--paper);display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+nav{background:#E2E7EE;border-right:1px solid var(--line);padding:24px 18px;position:sticky;top:0;height:100vh;overflow:auto}
+nav .brand{font-weight:800;font-size:20px;margin:0 0 4px}
+nav .sub{font-size:13px;color:var(--muted);margin:0 0 14px}
+nav a.slides-link{display:block;text-align:center;font-weight:700;background:var(--action);color:#fff;padding:8px;border-radius:5px;margin-bottom:12px}
+nav a.slides-link:hover{background:#0B7469}
+nav input{width:100%;font:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:5px;margin-bottom:14px;background:#fff}
+nav h4{font-size:13px;color:var(--muted);margin:16px 0 6px;font-weight:700}
+nav a{display:block;font-size:14px;color:var(--ink);text-decoration:none;padding:4px 8px;border-radius:4px;line-height:1.45}
+nav a:hover{background:#D3DAE4}
+nav a.on{background:var(--ink);color:#fff}
+main{padding:44px 56px 80px;max-width:900px}
+.path{font-size:13px;color:var(--muted)}
+h1.ptitle{font-size:34px;margin:6px 0 6px;line-height:1.25}
+.meta{font-size:14px;color:var(--muted);margin-bottom:22px;line-height:1.6}
+article{font-size:17px;line-height:1.8}
+article h1{display:none}
+article h2{font-size:23px;margin:30px 0 10px}
+article h3{font-size:19px;margin:22px 0 8px}
+article table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15.5px;background:var(--card)}
+article th,article td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;line-height:1.6}
+article th{background:#E6EBF1}
+article pre{background:var(--card);border:1px solid var(--line);padding:12px 14px;border-radius:5px;overflow:auto;font-size:14px;line-height:1.55}
+article code{font-size:.92em}
+article blockquote{margin:12px 0;padding:6px 16px;border-left:4px solid var(--line);color:var(--muted)}
+a.wl{color:var(--action);font-weight:700;text-decoration:none;border-bottom:1px solid currentColor}
+a.cite{font-size:12px;font-weight:700;color:#fff;background:var(--thought);padding:1px 6px;border-radius:3px;text-decoration:none;margin-left:2px;vertical-align:1px}
+.note-tag{font-size:12px;font-weight:700;color:#fff;background:var(--obs);padding:1px 6px;border-radius:3px;margin-left:2px;vertical-align:1px}
+.intro{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:4px 20px;margin-bottom:20px}
+.raw-note{color:var(--muted);font-size:15px}
+.back{margin-top:36px;font-size:14px;color:var(--muted)}
+.back a{color:var(--muted)}
+.links{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+a:focus-visible,input:focus-visible{outline:3px solid var(--thought);outline-offset:2px}
+@media (max-width:820px){body{grid-template-columns:1fr}nav{position:static;height:auto}main{padding:28px 20px 60px}}
+</style>
+</head>
+<body>
+<nav>
+  <p class="brand">AI Agents LLM Wiki</p>
+  <p class="sub">生成式 AI 作業｜LLM Wiki</p>
+  <input id="q" type="search" placeholder="搜尋頁面…" aria-label="搜尋頁面">
+  <div id="toc"></div>
+</nav>
+<main>
+  <div class="path" id="path"></div>
+  <h1 class="ptitle" id="title"></h1>
+  <div class="meta" id="meta"></div>
+  <article id="body"></article>
+  <div class="links" id="backlinks"></div>
+</main>
+<script>
+const PAGES=/*PAGES*/null, GROUPS=/*GROUPS*/null;
+const toc=document.getElementById('toc');
+function buildToc(filter=''){
+  toc.innerHTML='';const f=filter.trim().toLowerCase();
+  for(const [g,slugs] of Object.entries(GROUPS)){
+    const hits=slugs.filter(s=>!f||PAGES[s].title.toLowerCase().includes(f)||s.includes(f)||PAGES[s].html.toLowerCase().includes(f));
+    if(!hits.length)continue;
+    const h=document.createElement('h4');h.textContent=g;toc.appendChild(h);
+    hits.forEach(s=>{const a=document.createElement('a');a.href='#'+s;a.textContent=PAGES[s].title.replace(/^來源摘要｜/,'');a.dataset.s=s;toc.appendChild(a);});
+  }
+  mark();
+}
+function mark(){const cur=(location.hash.slice(1)||'index');toc.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.s===cur));}
+function show(){
+  const s=location.hash.slice(1)||'index';const p=PAGES[s]||PAGES['index'];
+  document.getElementById('path').textContent=p.path;
+  document.getElementById('title').textContent=p.title;
+  document.getElementById('meta').textContent=p.meta||'';
+  document.getElementById('body').innerHTML=p.html;
+  const back=Object.entries(PAGES).filter(([k,v])=>k!==s&&k!=='index'&&v.html.includes('href="#'+s+'"')).map(([k,v])=>`<a class="wl" href="#${k}">${k}</a>`);
+  document.getElementById('backlinks').innerHTML=back.length?'連到這一頁的頁面：'+back.join('、'):'';
+  mark();window.scrollTo(0,0);
+}
+document.getElementById('q').addEventListener('input',e=>buildToc(e.target.value));
+addEventListener('hashchange',show);buildToc();show();
+</script>
+</body>
+</html>
